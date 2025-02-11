@@ -1,2 +1,3 @@
-1. Set up configuration file
-2. Add endpoints to CRUD bill
+- [x] Set up configuration file
+- [ ] Setup database
+- [ ] Allow users to sign up, sign in and log out
