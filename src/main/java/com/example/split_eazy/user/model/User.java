@@ -1,4 +1,4 @@
-package com.example.split_eazy.models;
+package com.example.split_eazy.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
