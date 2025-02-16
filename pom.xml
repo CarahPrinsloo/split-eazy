@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>split-eazy</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<name>split-eazy</name>
 	<description>An app which allows users to split their bill with friends.</description>
 	<properties>
