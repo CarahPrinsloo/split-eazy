@@ -27,6 +27,8 @@ You will need to create the Split Eazy database:
 
 ```postgresql
 CREATE DATABASE split_eazy;
+
+CREATE ROLE carah PASSWORD 'password' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;
 ```
 
 ## Building the project
