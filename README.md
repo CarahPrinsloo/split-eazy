@@ -21,6 +21,16 @@ Before you build and run the project, ensure you have the following installed:
 
 If you are using sdkman, you can run `sdk env` to detect and set the version of Java required for this project.
 
+### Database
+
+You will need to create the Split Eazy database:
+
+```postgresql
+CREATE DATABASE split_eazy;
+
+CREATE ROLE carah PASSWORD 'password' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;
+```
+
 ## Building the project
 
 **To build the project and run tests, use:**
@@ -36,5 +46,5 @@ This will:
 ## Starting the server
 
 ```bash
-$ mvn spring-boot:run
+mvn spring-boot:run
 ```
