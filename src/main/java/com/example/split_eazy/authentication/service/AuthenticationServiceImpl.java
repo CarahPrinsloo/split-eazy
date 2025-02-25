@@ -1,4 +1,4 @@
-package com.example.split_eazy.user.service;
+package com.example.split_eazy.authentication.service;
 
 import com.example.split_eazy.security.service.JwtService;
 import com.example.split_eazy.user.model.User;
@@ -12,32 +12,43 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @Service
-public class UserServiceImpl implements UserService {
+public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private JwtService jwtService;
-    private AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthenticationServiceImpl(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            JwtService jwtService,
+            AuthenticationManager authenticationManager
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     @Override
     @Transactional
-    public Mono<User> registerUser(User user) {
+    public Mono<User> register(User user) {
         return userRepository.findByEmailAddress(user.getEmailAddress())
                 .switchIfEmpty(userRepository.findByName(user.getName()))
-                .flatMap(existingUser -> Mono.error(new ValidationException("User already exists.")))
+                .flatMap(existingUser -> Mono.error(
+                    new ValidationException("User already exists."))
+                )
                 .then(createAndSaveUser(user));
     }
 
     @Override
     public String login(User user) {
         UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken
-                .unauthenticated(user.getName(), user.getPassword());
+                            .unauthenticated(user.getName(), user.getPassword());
 
         authenticationManager.authenticate(token);
 
@@ -45,6 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Mono<User> createAndSaveUser(User user) {
+        user.setUuid(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }

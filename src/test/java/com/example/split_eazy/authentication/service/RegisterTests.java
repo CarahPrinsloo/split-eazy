@@ -1,7 +1,6 @@
-package com.example.split_eazy.users;
+package com.example.split_eazy.authentication.service;
 
 import com.example.split_eazy.user.model.User;
-import com.example.split_eazy.user.service.UserService;
 import jakarta.validation.ValidationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,9 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class RegisterUserTests {
+public class RegisterTests {
     @Autowired
-    private UserService userService;
+    private AuthenticationService authService;
 
     @Autowired
     private R2dbcEntityTemplate r2dbcEntityTemplate;
@@ -39,7 +38,7 @@ public class RegisterUserTests {
         newUser.setName("testuser");
         newUser.setPassword("password123");
 
-        User savedUser = userService.registerUser(newUser).block();
+        User savedUser = authService.register(newUser).block();
 
         assertNotNull(savedUser);
         assertNotNull(savedUser.getId());
@@ -54,7 +53,7 @@ public class RegisterUserTests {
         existingUser.setName("uniqueuser");
         existingUser.setPassword("password123");
 
-        userService.registerUser(existingUser).block(); // Save first user
+        authService.register(existingUser).block(); // Save first user
 
         User newUser = new User();
         newUser.setUuid(UUID.randomUUID());
@@ -63,7 +62,7 @@ public class RegisterUserTests {
         newUser.setPassword("password123");
 
         Exception exception = assertThrows(ValidationException.class, () -> {
-            userService.registerUser(newUser).block();
+            authService.register(newUser).block();
         });
 
         assertEquals("User already exists.", exception.getMessage());
@@ -77,7 +76,7 @@ public class RegisterUserTests {
         existingUser.setName("duplicateuser");
         existingUser.setPassword("password123");
 
-        userService.registerUser(existingUser).block(); // Save first user
+        authService.register(existingUser).block(); // Save first user
 
         User newUser = new User();
         newUser.setUuid(UUID.randomUUID());
@@ -86,7 +85,7 @@ public class RegisterUserTests {
         newUser.setPassword("password123");
 
         Exception exception = assertThrows(ValidationException.class, () -> {
-            userService.registerUser(newUser).block();
+            authService.register(newUser).block();
         });
 
         assertEquals("User already exists.", exception.getMessage());
